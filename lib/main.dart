@@ -48,13 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _imageBuilder(
       String _imageName, String _audioName, int r, int g, int b) {
-    var imgColor;
-    var imgColorBlendMode;
     return GestureDetector(
       child: Image.asset(
         'assets/images/$_imageName',
-        color: imgColor,
-        colorBlendMode: imgColorBlendMode,
       ),
       onPanStart: (_) {
         player.play('sounds/sweep.wav');
@@ -63,8 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
         player.play('sounds/$_audioName');
         setState(() {
           _bgColor = Color.fromRGBO(r, g, b, 0.8);
-          imgColor = Color.fromRGBO(255, 255, 255, 0.8);
-          imgColorBlendMode = BlendMode.srcATop;
         });
       },
     );
@@ -73,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
         padding: EdgeInsets.all(20),
         constraints: BoxConstraints(
           maxHeight: double.infinity,
