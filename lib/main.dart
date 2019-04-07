@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,21 +28,51 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+ AudioPlayer player = AudioPlayer();
+
+  void _sweep() {}
+
+  var _bgColor;
+
+  Widget _imageBuilder(String _imageName,String _audioName){
+    return GestureDetector(
+      child: Image.asset('assets/$_imageName'),
+      onTap: (){
+        player.play(_audioName);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _bgColor = Colors.blue;
     return Scaffold(
-      body: ConstrainedBox(
+      body: Container(
+        padding: EdgeInsets.all(20),
         constraints: BoxConstraints(
           maxHeight: double.infinity,
           maxWidth: double.infinity,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("Hello"),
-            Text("World"),
-          ],
+        color: _bgColor,
+        child: GestureDetector(
+          // swipe behaviour yet to be defined
+          
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              _imageBuilder('1c.png',''),
+              Image.asset('assets/2c.png'),
+              Image.asset('assets/3c.png'),
+              Image.asset('assets/4c.png'),
+              Image.asset('assets/5c.png'),
+              Image.asset('assets/6c.png'),
+              Image.asset('assets/7c.png'),
+              Image.asset('assets/8c.png'),
+            ],
+          ),
         ),
       ),
     );
