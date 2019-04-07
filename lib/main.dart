@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +15,39 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Xylophone',
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: LoadingScreen(),
+    );
+  }
+}
+
+class LoadingScreen extends StatefulWidget {
+  @override
+  _LoadingScreenState createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return SplashScreen(
+      seconds: 2,
+      backgroundColor: Colors.white,
+      imageBackground: AssetImage("assets/bg.jpg"),
+      styleTextUnderTheLoader: TextStyle(
+        fontSize: 25,
+      ),
+      image: Image.asset(
+        "assets/icon.png",
+        scale: 0.5,
+      ),
+      loaderColor: Colors.blue,
+      navigateAfterSeconds: new HomeScreen(),
+      loadingText: Text("Hang On! We are tuning some bits"),
+      title: Text(
+        "Xylophone",
+        softWrap: true,
+        textAlign: TextAlign.center,
+        textScaleFactor: 3,
+      ),
     );
   }
 }
@@ -57,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       onTap: () {
         player.play('sounds/$_audioName');
+        print("Played: $_audioName");
         setState(() {
           _bgColor = Color.fromRGBO(r, g, b, 0.8);
         });
