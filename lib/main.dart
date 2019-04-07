@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,9 +14,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Xylophone',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: HomeScreen(),
     );
   }
@@ -28,25 +25,53 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  AudioCache player = AudioCache();
 
- AudioPlayer player = AudioPlayer();
+  @override
+  void initState() {
+    super.initState();
+    player.loadAll([
+      'sounds/a.wav',
+      'sounds/b.wav',
+      'sounds/c.wav',
+      'sounds/c2.wav',
+      'sounds/d1.wav',
+      'sounds/e1.wav',
+      'sounds/f.wav',
+      'sounds/g.wav',
+      'sounds/sweep.wav'
+    ]);
+    player.play('sounds/sweep.wav');
+  }
 
-  void _sweep() {}
+  var _bgColor = Color.fromRGBO(250, 250, 250, 0);
 
-  var _bgColor;
-
-  Widget _imageBuilder(String _imageName,String _audioName){
+  Widget _imageBuilder(
+      String _imageName, String _audioName, int r, int g, int b) {
+    var imgColor;
+    var imgColorBlendMode;
     return GestureDetector(
-      child: Image.asset('assets/$_imageName'),
-      onTap: (){
-        player.play(_audioName);
+      child: Image.asset(
+        'assets/images/$_imageName',
+        color: imgColor,
+        colorBlendMode: imgColorBlendMode,
+      ),
+      onPanStart: (_) {
+        player.play('sounds/sweep.wav');
+      },
+      onTap: () {
+        player.play('sounds/$_audioName');
+        setState(() {
+          _bgColor = Color.fromRGBO(r, g, b, 0.8);
+          imgColor = Color.fromRGBO(255, 255, 255, 0.8);
+          imgColorBlendMode = BlendMode.srcATop;
+        });
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    _bgColor = Colors.blue;
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(20),
@@ -55,24 +80,20 @@ class _HomeScreenState extends State<HomeScreen> {
           maxWidth: double.infinity,
         ),
         color: _bgColor,
-        child: GestureDetector(
-          // swipe behaviour yet to be defined
-          
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              _imageBuilder('1c.png',''),
-              Image.asset('assets/2c.png'),
-              Image.asset('assets/3c.png'),
-              Image.asset('assets/4c.png'),
-              Image.asset('assets/5c.png'),
-              Image.asset('assets/6c.png'),
-              Image.asset('assets/7c.png'),
-              Image.asset('assets/8c.png'),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            _imageBuilder('1c.png', 'c.wav', 2, 67, 128),
+            _imageBuilder('2c.png', 'd1.wav', 250, 2, 2),
+            _imageBuilder('3c.png', 'e1.wav', 1, 1, 183),
+            _imageBuilder('4c.png', 'f.wav', 1, 176, 0),
+            _imageBuilder('5c.png', 'g.wav', 127, 127, 1),
+            _imageBuilder('6c.png', 'a.wav', 247, 215, 34),
+            _imageBuilder('7c.png', 'b.wav', 0, 94, 198),
+            _imageBuilder('8c.png', 'c2.wav', 244, 209, 10),
+          ],
         ),
       ),
     );
